@@ -3,27 +3,30 @@
 # robocall 101
 from argparse import ArgumentParser
 from os import environ
-from sys import exit
+from sys import exit, stdout
 try:
     from twilio.rest import Client
 except ImportError as err:
-    print(type(err).__name__ + ': ' + str(err))
+    stdout.write('Unable to import Twilio module, exiting...\n')
     exit(1)
 
 
 class TwilComm(object):
     def __init__(self):
-        self.url = 'https://www.restwords.com/'
         try:
             self.from_ = environ['TWILIO_NUMBER']
             self.client = Client(
                 environ['TWILIO_ACCOUNT_SID'],
                 environ['TWILIO_AUTH_TOKEN']
             )
-        except KeyError:
-            msg = 'Please ensure the following 3 environment variables are set:\n'
-            msg += 'TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, & TWILIO_NUMBER\n'
-            exit(1)
+        except KeyError as key_err:
+            self.exit_on_error(key_err)
+        self.url = 'https://www.restwords.com/'
+
+    @staticmethod
+    def exit_on_error(e):
+        print(type(e).__name__ + ': ' + str(e))
+        exit(1)
 
 
 class Call(TwilComm):
@@ -52,6 +55,11 @@ class ArnoldsHavingABadDay(TwilComm):
         pass
 
 
+class Recording(TwilComm):
+    def __init__(self):
+        super(TwilComm, self).__init__()
+
+
 class Arguments:
     def __init__(self):
         description = 'Robocall and Robotext via the command line.\n'
@@ -72,12 +80,13 @@ class Arguments:
     def help_menu(cls):
         return """
             REQUIRED:
-            -n <outgoing number>
-            
+            -n <outgoing number>               -| Target phone number
+
             PICK ONE:
-            -c/--call <text to be spoken>
-            -t/--text <text to be sent as SMS>
-            -a/--arnold 
+            -c/--call <text/string here>       -| Robocall on thy fly
+            -t/--text <text/string here>       -| Send an SMS
+            -a/--arnold                        -| Call with Arnold recording
+            -r/--rec <number of records>       -| gets latest N recordings
         """
 
     def get_args(self):
@@ -92,5 +101,7 @@ if __name__ == '__main__':
         Text().send_text()
     elif args.arnold:
         ArnoldsHavingABadDay().arnold_call()
+    elif args.rec:
+        pass
     else:
         print(Arguments.help_menu())
