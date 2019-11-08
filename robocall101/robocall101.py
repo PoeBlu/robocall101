@@ -25,7 +25,7 @@ class TwilComm(object):
 
     @staticmethod
     def exit_on_error(e):
-        print(type(e).__name__ + ': ' + str(e))
+        stdout.write(type(e).__name__ + ': ' + str(e) + '\n')
         exit(1)
 
 
