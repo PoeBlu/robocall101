@@ -55,11 +55,6 @@ class ArnoldsHavingABadDay(TwilComm):
         pass
 
 
-class Recording(TwilComm):
-    def __init__(self):
-        super(TwilComm, self).__init__()
-
-
 class Arguments:
     def __init__(self):
         description = 'Robocall and Robotext via the command line.\n'
@@ -72,13 +67,11 @@ class Arguments:
             '-t', '--text', help='Text - enter text to send as SMS')
         self.parser.add_argument(
             '-a', '--arnold', action='store_true', help='ArnoldsHavingABadDay')
-        self.parser.add_argument(
-            '-r', '--rec', type=int, help='Get latest recordings'
-        )
 
     @classmethod
     def help_menu(cls):
         return """
+
             REQUIRED:
             -n <outgoing number>               -| Target phone number
 
@@ -86,7 +79,7 @@ class Arguments:
             -c/--call <text/string here>       -| Robocall on thy fly
             -t/--text <text/string here>       -| Send an SMS
             -a/--arnold                        -| Call with Arnold recording
-            -r/--rec <number of records>       -| gets latest N recordings
+
         """
 
     def get_args(self):
@@ -101,7 +94,5 @@ if __name__ == '__main__':
         Text().send_text()
     elif args.arnold:
         ArnoldsHavingABadDay().arnold_call()
-    elif args.rec:
-        pass
     else:
         print(Arguments.help_menu())
