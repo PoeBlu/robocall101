@@ -50,7 +50,10 @@ PICK ONE:
 <br><br>
 <code>pip install git+https://github.com/rootVIII/robocall101</code><br>
 (or pip3 depending on your setup)
-
+<br><br>
+This was developed on Ubuntu 18.04.4 LTS.
+<hr>
+<b>Author: rootVIII 09NOV2019</b><br><br>
 
 
   
