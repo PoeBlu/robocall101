@@ -37,11 +37,11 @@ Twilio is free to try, but I recommend getting a paid number for $1 a month.
 <pre>
   <code>
 REQUIRED:
--n <outgoing number>
+-n &lt;outgoing number&gt; 
 
 PICK ONE:
--c/--call <text/string here> (Robocall on thy fly)
--t/--text <text/string here> (Send an SMS text message)
+-c/--call &lt;text/string here&gt; (Robocall on thy fly)
+-t/--text &lt;text/string here&gt; (Send an SMS text message)
 -a/--arnold (Call with Arnold recording)
   </code>
 </pre>
