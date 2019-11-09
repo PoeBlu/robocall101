@@ -12,7 +12,7 @@ A text may also be sent with the <code>-t</code>.
 
 Arnold is having a bad day - Use the <code>-a</code> option
 (for extreme circumstances only).
-<br><br><br>
+<br><br>
 <b>Requirements</b><br>
 <ul>
   <li>Python3 and <code>pip install twilio</code></li>
@@ -37,7 +37,7 @@ Twilio is free to try, but I recommend getting a paid number for $1 a month.
 <pre>
   <code>
 REQUIRED:
--n <outgoing number>             -| Target phone number
+-n <outgoing number>
 
 PICK ONE:
 -c/--call <text/string here>     -| Robocall on thy fly
@@ -45,7 +45,7 @@ PICK ONE:
 -a/--arnold                      -| Call with Arnold recording
   </code>
 </pre>
-<br><br><br>
+<br>
 <b>optionally install from git:</b><br>
 
 <code>pip install git+https://github.com/rootVIII/robocall101</code><br>
