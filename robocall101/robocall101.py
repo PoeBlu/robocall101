@@ -17,12 +17,9 @@ except ImportError:
 
 class TwilComm(object):
     def __init__(self):
-        try:
-            self.my_twilio = environ['TWILIO_NUMBER']
-            self.client = Client(
-                environ['TWILIO_ACCOUNT_SID'], environ['TWILIO_AUTH_TOKEN'])
-        except KeyError as key_err:
-            self.exit_on_error(key_err)
+        self.my_twilio = environ['TWILIO_NUMBER']
+        self.client = Client(
+            environ['TWILIO_ACCOUNT_SID'], environ['TWILIO_AUTH_TOKEN'])
         self.url = 'https://www.restwords.com/api/post_markup'
         self.message = ''
 
