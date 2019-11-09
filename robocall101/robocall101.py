@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#!/usr/bin/env python3
 # rootVIII
 # robocall101
 # pycodestyle/pep8 validated
@@ -96,7 +96,7 @@ class Arguments:
             Set the following environment variables:
 
             TWILIO_NUMBER=18885551234
-            TTWILIO_ACCOUNT_SID=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+            TWILIO_ACCOUNT_SID=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
             TWILIO_AUTH_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 
