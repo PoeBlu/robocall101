@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name="robocall101",
-    version="1.1",
+    version="1.2",
     packages=["robocall101"],
     url="https://github.com/rootVIII/robocall101",
     license="MIT",
