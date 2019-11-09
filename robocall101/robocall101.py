@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # rootVIII
-# robocall101
+# robocall101 - Robovoice/SMS command-line tool
 # pycodestyle/pep8 validated
 from argparse import ArgumentParser
 from json import loads
@@ -115,7 +115,8 @@ class Arguments:
         return self.parser.parse_args()
 
 
-if __name__ == '__main__':
+def main():
+    # Print better help menu if no args
     if len(argv) < 2:
         print(Arguments.help_menu())
         exit(1)
@@ -134,3 +135,7 @@ if __name__ == '__main__':
         ArnoldsHavingABadDay(args.number).make_call()
     else:
         print(Arguments.help_menu())
+
+
+if __name__ == '__main__':
+    main()
