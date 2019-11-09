@@ -47,7 +47,7 @@ PICK ONE:
 </pre>
 <br>
 <b>optionally install from git:</b><br>
-
+<br><br>
 <code>pip install git+https://github.com/rootVIII/robocall101</code><br>
 (or pip3 depending on your setup)
 
