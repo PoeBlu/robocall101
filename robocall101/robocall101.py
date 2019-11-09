@@ -38,7 +38,7 @@ class TwilComm(object):
         rbody += '<Pause/><Say>' + self.message + '</Say></Response>'
         request.data = rbody.encode()
         try:
-            result = urlopen(request, timeout=2)
+            result = urlopen(request)
         except HTTPError as e:
             self.exit_on_error(e)
         else:
