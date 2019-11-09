@@ -3,10 +3,11 @@
 
 <b>about</b><br><br>
 This program posts a temporary XML/TWIML file to
-<a href="https://www.restwords.com">restwords.com</a><br> and connects
-to it with the Twilio API to make a robocall on-the-fly. <br>The Twilio
-bot will transcribe and speak exactly what you pass with<br>the 
-<code>-c</code> option (including swears, most slang, and large numbers).
+<a href="https://www.restwords.com">restwords.com</a><br> to use as
+a webhook. Then the Twilio API connects to that webhook<br>to make
+a robocall on-the-fly. The Twilio bot will transcribe and<br>speak
+exactly what you pass with the <code>-c</code> option
+(including swears,<br>most slang, and large numbers).
 
 A text may also be sent with the <code>-t</code> option.
 
