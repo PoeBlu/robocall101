@@ -7,7 +7,7 @@ from json import loads
 from os import environ
 from sys import exit, argv
 from urllib.request import Request, urlopen
-from urllib.error import HTTPError
+from urllib.error import URLError
 try:
     from twilio.rest import Client
 except ImportError:
@@ -20,7 +20,7 @@ class TwilComm(object):
         self.my_twilio = environ['TWILIO_NUMBER']
         self.client = Client(
             environ['TWILIO_ACCOUNT_SID'], environ['TWILIO_AUTH_TOKEN'])
-        self.url = 'https://www.restwords.com/api/post_markup'
+        self.url = 'https://www.restword.com/api/post_markup'
         self.message = ''
 
     @staticmethod
@@ -36,7 +36,7 @@ class TwilComm(object):
         request.data = rbody.encode()
         try:
             result = urlopen(request)
-        except HTTPError as e:
+        except URLError as e:
             self.exit_on_error(e)
         else:
             self.url = loads(result.read().decode())['url']
