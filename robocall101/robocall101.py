@@ -20,7 +20,7 @@ class TwilComm(object):
         self.my_twilio = environ['TWILIO_NUMBER']
         self.client = Client(
             environ['TWILIO_ACCOUNT_SID'], environ['TWILIO_AUTH_TOKEN'])
-        self.url = 'https://www.restword.com/api/post_markup'
+        self.url = 'https://www.restwords.com/api/post_markup'
         self.message = ''
 
     @staticmethod
