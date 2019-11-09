@@ -51,7 +51,7 @@ class TwilComm(object):
 
 class Call(TwilComm):
     def __init__(self, outgoing, message):
-        super(TwilComm, self).__init__()
+        TwilComm.__init__(self)
         self.outgoing = outgoing
         self.message = message
 
@@ -65,7 +65,7 @@ class Call(TwilComm):
 
 class Text(TwilComm):
     def __init__(self, outgoing, message):
-        super(TwilComm, self).__init__()
+        TwilComm.__init__(self)
         self.outgoing = outgoing
         self.message = message
 
@@ -78,12 +78,11 @@ class Text(TwilComm):
 
 
 class ArnoldsHavingABadDay(Call):
-    def __init__(self, outgoing, message):
-        super(Call, self).__init__()
+    def __init__(self, outgoing):
+        Call.__init__(self)
         self.url = 'https://blue-platypus-3554.'
         self.url += 'twil.io/assets/arnold.mp3'
         self.outgoing = outgoing
-        self.message = message
 
 
 class Arguments:
@@ -135,13 +134,17 @@ if __name__ == '__main__':
         print(Arguments.help_menu())
         exit(1)
     args = Arguments().get_args()
+    if not args.number.isnumeric():
+        print(Arguments.help_menu())
+        exit(1)
     if args.call:
         call = Call(args.number, args.call)
         call.post()
         call.make_call()
     elif args.text:
-        Text(args.number, args.text).send_text()
+        text = Text(args.number, args.text)
+        text.send_text()
     elif args.arnold:
-        ArnoldsHavingABadDay(args.number, args.arnold).make_call()
+        ArnoldsHavingABadDay(args.number).make_call()
     else:
         print(Arguments.help_menu())
