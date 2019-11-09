@@ -6,7 +6,7 @@ This program posts a temporary XML/TWIML file to
 <a href="https://www.restwords.com">restwords.com</a><br> and connects
 to it with the Twilio API to make a robocall on-the-fly. <br>The Twilio
 bot will transcribe and speak exactly what you pass with<br>the 
-<code>-c</code> option.
+<code>-c</code> option (including swears, most slang, and large numbers).
 
 A text may also be sent with the <code>-t</code>.
 
