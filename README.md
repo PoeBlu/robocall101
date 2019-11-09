@@ -40,9 +40,9 @@ REQUIRED:
 -n <outgoing number>
 
 PICK ONE:
--c/--call <text/string here>     -| Robocall on thy fly
--t/--text <text/string here>     -| Send an SMS
--a/--arnold                      -| Call with Arnold recording
+-c/--call <text/string here> (Robocall on thy fly)
+-t/--text <text/string here> (Send an SMS text message)
+-a/--arnold (Call with Arnold recording)
   </code>
 </pre>
 <br>
