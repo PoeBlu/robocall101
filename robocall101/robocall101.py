@@ -10,7 +10,7 @@ from urllib.request import Request, urlopen
 from urllib.error import HTTPError
 try:
     from twilio.rest import Client
-except ImportError as err:
+except ImportError:
     print('Unable to import Twilio module, exiting.')
     exit(1)
 
