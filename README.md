@@ -8,10 +8,10 @@ to it with the Twilio API to make a robocall on-the-fly. <br>The Twilio
 bot will transcribe and speak exactly what you pass with<br>the 
 <code>-c</code> option (including swears, most slang, and large numbers).
 
-A text may also be sent with the <code>-t</code>.
+A text may also be sent with the <code>-t</code> option.
 
-Arnold is having a bad day - Use the <code>-a</code> option
-(for extreme circumstances only).
+Arnold is having a bad day - Use the <code>-a</code> option.<br>
+(for extreme circumstances only)
 <br><br>
 <b>Requirements</b><br>
 <ul>
