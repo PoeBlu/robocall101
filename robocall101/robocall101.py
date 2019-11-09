@@ -1,70 +1,104 @@
 #! /usr/bin/python3
 # rootVIII
 # robocall 101
+# pycodestyle/pep8 validated
 from argparse import ArgumentParser
+from json import loads
 from os import environ
-from sys import exit, stdout
+from sys import exit, argv
+from urllib.request import Request, urlopen
+from urllib.error import HTTPError
 try:
     from twilio.rest import Client
 except ImportError as err:
-    stdout.write('Unable to import Twilio module, exiting...\n')
+    print('Unable to import Twilio module, exiting.')
     exit(1)
 
 
 class TwilComm(object):
     def __init__(self):
         try:
-            self.from_ = environ['TWILIO_NUMBER']
+            self.my_twilio = environ['TWILIO_NUMBER']
             self.client = Client(
                 environ['TWILIO_ACCOUNT_SID'],
-                environ['TWILIO_AUTH_TOKEN']
-            )
+                environ['TWILIO_AUTH_TOKEN'])
         except KeyError as key_err:
             self.exit_on_error(key_err)
-        self.url = 'https://www.restwords.com/'
+        self.url = 'https://www.restwords.com/post_markup'
+        self.message = ''
 
-    @staticmethod
-    def exit_on_error(e):
-        stdout.write(type(e).__name__ + ': ' + str(e) + '\n')
+    @classmethod
+    def exit_on_error(cls, e):
+        print(type(e).__name__ + ': ' + str(e))
         exit(1)
+
+    def post(self):
+        # request = Request('https://www.restwords.com/api/post_markup')
+        request = Request(self.url)
+        request.add_header('Content-type', 'text/xml; charset="utf-8"')
+        request_body = '<?xml version="1.0" encoding="utf-8"?>'
+        # request_body += '<hi>helloworld</hi>'
+        request_body += self.message
+        request.data = request_body.encode()
+        try:
+            result = urlopen(request, timeout=2)
+        except HTTPError as e:
+            self.exit_on_error(e)
+        else:
+            return loads(result.read().decode())['url']
 
 
 class Call(TwilComm):
-    def __init__(self):
+    def __init__(self, outgoing, message):
         super(TwilComm, self).__init__()
-        self.url += 'api/post_json'
+        self.outgoing = outgoing
+        self.message = message
 
     def make_call(self):
-        pass
+        self.client.calls.create(
+            to=self.outgoing,
+            from_=self.my_twilio,
+            url=self.url)
 
 
 class Text(TwilComm):
-    def __init__(self):
+    def __init__(self, outgoing, message):
         super(TwilComm, self).__init__()
+        self.outgoing = outgoing
+        self.message = message
 
     def send_text(self):
-        pass
+        self.client.messages.create(
+            to=self.outgoing,
+            from_=self.my_twilio,
+            body=self.message)
 
 
-class ArnoldsHavingABadDay(TwilComm):
-    def __init__(self):
-        super(TwilComm, self).__init__()
-        self.url += 'static/arnold.mp3'
+class ArnoldsHavingABadDay(Call):
+    def __init__(self, outgoing, message):
+        super(Call, self).__init__()
+        self.url = 'https://blue-platypus-3554.'
+        self.url += 'twil.io/assets/arnold.mp3'
+        self.outgoing = outgoing
+        self.message = message
 
-    def arnold_call(self):
-        pass
+    # def make_call(self): inherits! :O
 
 
 class Arguments:
     def __init__(self):
         description = 'Robocall and Robotext via the command line.\n'
         self.parser = ArgumentParser(description=description)
+
         self.parser.add_argument(
             '-n', '--number', required=True, help='Outgoing phone number')
+
         self.parser.add_argument(
             '-c', '--call', help='Robocall - enter text to be spoken')
+
         self.parser.add_argument(
             '-t', '--text', help='Text - enter text to send as SMS')
+
         self.parser.add_argument(
             '-a', '--arnold', action='store_true', help='ArnoldsHavingABadDay')
 
@@ -72,13 +106,22 @@ class Arguments:
     def help_menu(cls):
         return """
 
+            Obtain your Twilio Credentials and Twilio Number.
+            Set the following environment variables:
+
+            TWILIO_NUMBER=18885551234
+            TTWILIO_ACCOUNT_SID=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+            TWILIO_AUTH_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+
             REQUIRED:
-            -n <outgoing number>               -| Target phone number
+            -n <outgoing number>             -| Target phone number
 
             PICK ONE:
-            -c/--call <text/string here>       -| Robocall on thy fly
-            -t/--text <text/string here>       -| Send an SMS
-            -a/--arnold                        -| Call with Arnold recording
+            -c/--call <text/string here>     -| Robocall on thy fly
+            -t/--text <text/string here>     -| Send an SMS
+            -a/--arnold                      -| Call with Arnold recording
 
         """
 
@@ -87,12 +130,15 @@ class Arguments:
 
 
 if __name__ == '__main__':
+    if len(argv) < 2:
+        print(Arguments.help_menu())
+        exit(1)
     args = Arguments().get_args()
     if args.call:
-        Call().make_call()
+        Call(args.number, args.call).make_call()
     elif args.text:
-        Text().send_text()
+        Text(args.number, args.text).send_text()
     elif args.arnold:
-        ArnoldsHavingABadDay().arnold_call()
+        ArnoldsHavingABadDay(args.number, args.arnold).make_call()
     else:
         print(Arguments.help_menu())
