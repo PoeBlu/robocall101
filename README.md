@@ -31,7 +31,7 @@ Twilio is free to try, but I recommend getting a paid number for $1 a month.
 <b>example usage:</b><br>
 <ul>
   <li>./robocall101.py -n 18881234567 -t "hello world"</li>
-  <li>./robocall101.py -n 18881234567 -c 'hello world'</li>
+  <li>./robocall101.py -n 18881234567 -c "hello world"</li>
   <li>./robocall101.py -n 18881234567 -a</li>
 </ul>
 
