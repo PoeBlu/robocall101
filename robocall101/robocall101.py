@@ -10,7 +10,6 @@ from urllib.request import Request, urlopen
 from urllib.error import HTTPError
 try:
     from twilio.rest import Client
-    from twilio.rest import TwilioException
 except ImportError as err:
     print('Unable to import Twilio module, exiting.')
     exit(1)
@@ -21,26 +20,23 @@ class TwilComm(object):
         try:
             self.my_twilio = environ['TWILIO_NUMBER']
             self.client = Client(
-                environ['TWILIO_ACCOUNT_SID'],
-                environ['TWILIO_AUTH_TOKEN'])
+                environ['TWILIO_ACCOUNT_SID'], environ['TWILIO_AUTH_TOKEN'])
         except KeyError as key_err:
             self.exit_on_error(key_err)
-        self.url = 'https://www.restwords.com/post_markup'
+        self.url = 'https://www.restwords.com/api/post_markup'
         self.message = ''
 
-    @classmethod
-    def exit_on_error(cls, e):
+    @staticmethod
+    def exit_on_error(e):
         print(type(e).__name__ + ': ' + str(e))
         exit(1)
 
     def post(self):
-        # request = Request('https://www.restwords.com/api/post_markup')
         request = Request(self.url)
         request.add_header('Content-type', 'text/xml; charset="utf-8"')
-        request_body = '<?xml version="1.0" encoding="utf-8"?>'
-        # request_body += '<hi>helloworld</hi>'
-        request_body += self.message
-        request.data = request_body.encode()
+        rbody = '<?xml version=\"1.0\" encoding=\"utf-8\"?><Response>'
+        rbody += '<Pause/><Say>' + self.message + '</Say></Response>'
+        request.data = rbody.encode()
         try:
             result = urlopen(request, timeout=2)
         except HTTPError as e:
@@ -56,11 +52,8 @@ class Call(TwilComm):
         self.message = message
 
     def make_call(self):
-        try:
-            self.client.calls.create(
-                to=self.outgoing, from_=self.my_twilio, url=self.url)
-        except TwilioException as twilio_err:
-            TwilComm.exit_on_error(twilio_err)
+        self.client.calls.create(
+            to=self.outgoing, from_=self.my_twilio, url=self.url)
 
 
 class Text(TwilComm):
@@ -70,16 +63,13 @@ class Text(TwilComm):
         self.message = message
 
     def send_text(self):
-        try:
-            self.client.messages.create(
-                to=self.outgoing, from_=self.my_twilio, body=self.message)
-        except TwilioException as twilio_err:
-            Call.exit_on_error(twilio_err)
+        self.client.messages.create(
+            to=self.outgoing, from_=self.my_twilio, body=self.message)
 
 
 class ArnoldsHavingABadDay(Call):
     def __init__(self, outgoing):
-        Call.__init__(self)
+        Call.__init__(self, outgoing=outgoing, message=None)
         self.url = 'https://blue-platypus-3554.'
         self.url += 'twil.io/assets/arnold.mp3'
         self.outgoing = outgoing
@@ -89,16 +79,12 @@ class Arguments:
     def __init__(self):
         description = 'Robocall and Robotext via the command line.\n'
         self.parser = ArgumentParser(description=description)
-
         self.parser.add_argument(
             '-n', '--number', required=True, help='Outgoing phone number')
-
         self.parser.add_argument(
             '-c', '--call', help='Robocall - enter text to be spoken')
-
         self.parser.add_argument(
             '-t', '--text', help='Text - enter text to send as SMS')
-
         self.parser.add_argument(
             '-a', '--arnold', action='store_true', help='ArnoldsHavingABadDay')
 
