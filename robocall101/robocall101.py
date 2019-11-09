@@ -10,6 +10,7 @@ from urllib.request import Request, urlopen
 from urllib.error import HTTPError
 try:
     from twilio.rest import Client
+    from twilio.rest import TwilioException
 except ImportError as err:
     print('Unable to import Twilio module, exiting.')
     exit(1)
@@ -45,7 +46,7 @@ class TwilComm(object):
         except HTTPError as e:
             self.exit_on_error(e)
         else:
-            return loads(result.read().decode())['url']
+            self.url = loads(result.read().decode())['url']
 
 
 class Call(TwilComm):
@@ -55,10 +56,11 @@ class Call(TwilComm):
         self.message = message
 
     def make_call(self):
-        self.client.calls.create(
-            to=self.outgoing,
-            from_=self.my_twilio,
-            url=self.url)
+        try:
+            self.client.calls.create(
+                to=self.outgoing, from_=self.my_twilio, url=self.url)
+        except TwilioException as twilio_err:
+            TwilComm.exit_on_error(twilio_err)
 
 
 class Text(TwilComm):
@@ -68,10 +70,11 @@ class Text(TwilComm):
         self.message = message
 
     def send_text(self):
-        self.client.messages.create(
-            to=self.outgoing,
-            from_=self.my_twilio,
-            body=self.message)
+        try:
+            self.client.messages.create(
+                to=self.outgoing, from_=self.my_twilio, body=self.message)
+        except TwilioException as twilio_err:
+            Call.exit_on_error(twilio_err)
 
 
 class ArnoldsHavingABadDay(Call):
@@ -81,8 +84,6 @@ class ArnoldsHavingABadDay(Call):
         self.url += 'twil.io/assets/arnold.mp3'
         self.outgoing = outgoing
         self.message = message
-
-    # def make_call(self): inherits! :O
 
 
 class Arguments:
@@ -135,7 +136,9 @@ if __name__ == '__main__':
         exit(1)
     args = Arguments().get_args()
     if args.call:
-        Call(args.number, args.call).make_call()
+        call = Call(args.number, args.call)
+        call.post()
+        call.make_call()
     elif args.text:
         Text(args.number, args.text).send_text()
     elif args.arnold:
