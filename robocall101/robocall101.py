@@ -25,14 +25,14 @@ class TwilComm(object):
 
     @staticmethod
     def exit_on_error(e):
-        print(type(e).__name__ + ': ' + str(e))
+        print(f'{type(e).__name__}: {str(e)}')
         exit(1)
 
     def post(self):
         request = Request(self.url)
         request.add_header('Content-type', 'text/xml; charset="utf-8"')
         rbody = '<?xml version=\"1.0\" encoding=\"utf-8\"?><Response>'
-        rbody += '<Pause/><Say>' + self.message + '</Say></Response>'
+        rbody += f'<Pause/><Say>{self.message}</Say></Response>'
         request.data = rbody.encode()
         try:
             result = urlopen(request)
@@ -67,8 +67,7 @@ class Text(TwilComm):
 class ArnoldsHavingABadDay(Call):
     def __init__(self, outgoing):
         Call.__init__(self, outgoing=outgoing, message=None)
-        self.url = 'https://blue-platypus-3554.'
-        self.url += 'twil.io/assets/arnold.mp3'
+        self.url = 'https://blue-platypus-3554.' + 'twil.io/assets/arnold.mp3'
         self.outgoing = outgoing
 
 
